@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    const ws = new WebSocket('ws://localhost:3000/ws');
+    //    ws.onmessage = (e) => {
+    //        console.log('message : ' + e.data);
+    //    };
+    //
+    //    ws.onerror = (err) => {
+    //        console.log('error : ' + err);
+    //    };
+    //
+    //    ws.onopen = () => {
+    //        console.log('connect');
+    //        ws.send('data');
+    //    };
+    //
+    //    ws.onclose = () => {
+    //        console.log(close);
+    //    };
+
+
+    let data = [
+        ['.', 'data', 'aaaa', 'aaa.xls'],
+        ['.', 'data', 'aaaa', 'aaaa', 'aaaa.doc'],
+        ['.', 'data', 'aaaa', 'aaaa', 'sss.xls'],
+        ['.', 'data', 'aaaa', 'aaaa', 'asdasdasd'],
+        ['.', 'data', 'bbbb']
+    ];
+    function Node(index, label) {
+        this.id = index;
+        this.label = label;
+        this.children = [];
+    }
+    function ArrayList() {
+        this.head = new Node(0, '.');
+        this.tail = this.head;
+        this.append = function (i, l) {
+            node = new Node(i, l);
+            this.tail.children.push(node);
+            this.tail = node;
+        };
+        this.insertAt=function(ii, i, l){
+            node = new Node(i, l);
+            //找到位置的节点
+            tempNode=this.head;
+            for(i=0;i<ii;i++){
+                if(tempNode.children!=[]){
+                    tempNode=tempNode.children;
+                }else{
+                    break;
+                }
+            }
+            node.children=tempNode.children;
+            tempNode.children = node;
+        }
+    }
+    function Iterator(arryList) {
+        this.point = arryList.head;
+        this.hasNext = function () {
+            if(this.point){
+                if (this.point.children !== []) {
+                    this.point = this.point.children;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+        this.next = function () {
+            if(this.point){
+                if(this.point.length){
+                    return this.point[0].label
+                }
+            }
+        }
+    }
+
+    var arry = new ArrayList();
+    arry.append(1,1);
+    arry.append(2,2);
+    arry.append(3,3);
+    console.log(arry);
+    iterator = new Iterator(arry);
+    while (iterator.hasNext()) {
+        document.write(iterator.next());
+        document.write('<br/>');
+    }
+
+
+</script>
+</body>
+</html>
